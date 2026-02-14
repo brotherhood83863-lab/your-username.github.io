@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARRB - Advanced Authentication System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 165, 0, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .logo-box {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #ffa500 0%, #ff6b00 100%);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 20px 60px rgba(255, 165, 0, 0.4),
+                inset 0 -5px 20px rgba(0, 0, 0, 0.2);
+            animation: logoFloat 4s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        .logo-text {
+            font-size: 64px;
+            color: #000000;
+            font-weight: 900;
+            letter-spacing: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 64px;
+            margin-bottom: 15px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #ffffff 0%, #ffa500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            border-radius: 24px;
+            padding: 50px 40px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.2s; }
+        .card:nth-child(2) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 165, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            border-color: #ffa500;
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 
+                0 30px 80px rgba(255, 165, 0, 0.3),
+                inset 0 1px 0 rgba(255, 165, 0, 0.2);
+        }
+
+        .card-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, rgba(255, 165, 0, 0.1) 0%, rgba(255, 107, 0, 0.1) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, rgba(255, 165, 0, 0.2) 0%, rgba(255, 107, 0, 0.2) 100%);
+        }
+
+        .card-icon {
+            font-size: 56px;
+            filter: drop-shadow(0 4px 8px rgba(255, 165, 0, 0.3));
+        }
+
+        .card h2 {
+            color: #ffa500;
+            font-size: 32px;
+            margin-bottom: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            color: #b0b0b0;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .card-btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #ffa500 0%, #ff6b00 100%);
+            color: #000000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 165, 0, 0.3);
+        }
+
+        .card-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 165, 0, 0.5);
+        }
+
+        .stats-section {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            animation: fadeIn 1.2s ease-out 0.6s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 165, 0, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 165, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            border-color: rgba(255, 165, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 36px;
+            font-weight: 900;
+            color: #ffa500;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #888888;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .feature-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            animation: fadeIn 1.4s ease-out 0.8s;
+            animation-fill-mode: both;
+        }
+
+        .badge {
+            padding: 10px 20px;
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            border-radius: 20px;
+            color: #ffa500;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255, 165, 0, 0.2);
+            border-color: #ffa500;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 42px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .card {
+                padding: 35px 25px;
+            }
+
+            .logo-box {
+                width: 110px;
+                height: 110px;
+            }
+
+            .logo-text {
+                font-size: 48px;
+                letter-spacing: 6px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.5s ease-out 1s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 165, 0, 0.1);
+            border-top-color: #ffa500;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-box">
+                    <div class="logo-text">ARRB</div>
+                </div>
+            </div>
+            <h1>ARRB SYSTEM</h1>
+            <p class="subtitle">Advanced Authentication & Data Management Platform</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card" onclick="window.location.href='user-login.html'">
+                <div class="card-icon-wrapper">
+                    <div class="card-icon">🔐</div>
+                </div>
+                <h2>Member Portal</h2>
+                <p>Secure multi-layer authentication with phone verification, OTP validation, and payment password protection.</p>
+                <a href="user-login.html" class="card-btn">
+                    <span>Access Login →</span>
+                </a>
+            </div>
+
+            <div class="card" onclick="window.location.href='admin-panel.html'">
+                <div class="card-icon-wrapper">
+                    <div class="card-icon">📊</div>
+                </div>
+                <h2>Admin Dashboard</h2>
+                <p>Real-time monitoring of all authentication events with advanced analytics, export capabilities, and data management.</p>
+                <a href="admin-panel.html" class="card-btn">
+                    <span>Open Admin →</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalEntries">0</span>
+                    <span class="stat-label">Total Records</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="lastUpdate">--</span>
+                    <span class="stat-label">Last Activity</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="storageUsed">0 KB</span>
+                    <span class="stat-label">Storage Used</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="sessionCount">0</span>
+                    <span class="stat-label">Active Sessions</span>
+                </div>
+            </div>
+
+            <div class="feature-badges">
+                <span class="badge">✓ 4-Layer Security</span>
+                <span class="badge">✓ Real-time Updates</span>
+                <span class="badge">✓ Auto-refresh</span>
+                <span class="badge">✓ Data Export</span>
+                <span class="badge">✓ Mobile Optimized</span>
+                <span class="badge">✓ Secure Storage</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        function updateStats() {
+            const allData = localStorage.getItem('loginData');
+            const dataArray = allData ? JSON.parse(allData) : [];
+            
+            document.getElementById('totalEntries').textContent = dataArray.length;
+            
+            const uniquePhones = new Set(dataArray.map(item => item.phone).filter(Boolean));
+            document.getElementById('sessionCount').textContent = uniquePhones.size;
+            
+            if (dataArray.length > 0) {
+                const lastEntry = dataArray[dataArray.length - 1];
+                const lastTime = new Date(lastEntry.time);
+                const now = new Date();
+                const diff = Math.floor((now - lastTime) / 1000);
+                
+                let timeAgo;
+                if (diff < 60) {
+                    timeAgo = diff + 's';
+                } else if (diff < 3600) {
+                    timeAgo = Math.floor(diff / 60) + 'm';
+                } else if (diff < 86400) {
+                    timeAgo = Math.floor(diff / 3600) + 'h';
+                } else {
+                    timeAgo = Math.floor(diff / 86400) + 'd';
+                }
+                
+                document.getElementById('lastUpdate').textContent = timeAgo;
+            } else {
+                document.getElementById('lastUpdate').textContent = '--';
+            }
+            
+            let totalSize = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    totalSize += localStorage[key].length + key.length;
+                }
+            }
+            document.getElementById('storageUsed').textContent = (totalSize / 1024).toFixed(1) + ' KB';
+        }
+
+        updateStats();
+        setInterval(updateStats, 3000);
+        window.addEventListener('storage', updateStats);
+    </script>
+</body>
+</html>
